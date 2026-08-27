@@ -1,0 +1,105 @@
+# Full stack: PostgreSQL + Spring Boot API + React/nginx frontend.
+#
+#   docker compose up -d --build     start (rebuilding images)
+#   docker compose ps                state + health of each service
+#   docker compose logs -f backend   follow one service
+#   docker compose down              stop (keeps the database volume)
+#   docker compose down -v           stop AND erase the database
+#
+# Reads .env from this directory — copy .env.example and fill it in first.
+# No `version:` key: it has been obsolete since Compose v2 and now warns.
+
+services:
+
+  # ── Database ──────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: referentiel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Host port is configurable because 5432 is very often already taken (another
+      # Postgres container, or a native install). The value only affects tools
+      # connecting from the host — inside the network the backend always uses
+      # db:5432. Remove this mapping entirely for a real deployment.
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend (Spring Boot) ────────────────────────────────
+  backend:
+    build:
+      context: ./repository-api
+      dockerfile: Dockerfile
+    image: referentiel-backend:latest
+    container_name: referentiel_backend
+    restart: unless-stopped
+    environment:
+      # Names must match what application-prod.properties actually reads —
+      # DB_URL/DB_USER/DB_PASSWORD here previously didn't match DATABASE_URL/
+      # DATABASE_USERNAME/DATABASE_PASSWORD, so the backend silently fell back
+      # to the dev profile (in-memory H2, debug logging, open H2 console) on
+      # every docker compose run.
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      DATABASE_USERNAME: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      CREDENTIALS_SECRET: ${CREDENTIALS_SECRET}
+      BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-admin}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD}
+      # Swagger UI at /swagger-ui.html. The prod profile defaults this to false;
+      # it is on here so the documentation is usable on the local stack. Swagger UI
+      # cannot be authenticated (the page has to load before you can log in through
+      # it), so it publishes the full endpoint inventory to anyone who can reach the
+      # port — turn it off for anything internet-facing.
+      SPRINGDOC_ENABLED: ${SPRINGDOC_ENABLED:-true}
+      # Deliberately unset — the prod profile defaults it to empty (fail closed).
+      # The browser reaches the API through nginx on the frontend's own origin, and
+      # nginx clears the Origin header on the way through (see frontend/nginx.conf),
+      # so no cross-origin grant is needed.
+      #
+      # Set this ONLY if something calls the API on a different origin than the UI
+      # is served from — e.g. hitting BACKEND_PORT directly from a browser tool.
+      # Comma-separated, exact origins:
+      #   CORS_ALLOWED_ORIGINS: "http://localhost:8081,https://app.example.com"
+    ports:
+      # Direct access for curl/Postman/debugging. The frontend does NOT use this —
+      # it reaches the API as http://backend:8082 over the compose network — so
+      # changing or removing it cannot break the app.
+      - "${BACKEND_PORT:-8082}:8082"
+    depends_on:
+      db:
+        condition: service_healthy   # waits for Postgres to be truly ready, not just "started"
+    # Health comes from the HEALTHCHECK in the backend Dockerfile
+    # (GET /actuator/health), which is what the frontend gates on below.
+
+  # ── Frontend (React, served by Nginx) ───────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: referentiel-frontend:latest
+    container_name: referentiel_frontend
+    restart: unless-stopped
+    ports:
+      # This is the one the user actually opens.
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        # Previously a bare `depends_on: [backend]`, which only waits for the
+        # container to start — not for Spring to finish booting. nginx would come
+        # up first and proxy every /api call into a connection refused, so the
+        # login page returned 502 for the ~20s the JVM took to start.
+        condition: service_healthy
+
+volumes:
+  postgres_data:      # named volume — database data survives container restarts/rebuilds

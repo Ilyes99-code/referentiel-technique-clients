@@ -1,0 +1,26 @@
+# Without this file, the `COPY . .` in Dockerfile copies the host's node_modules
+# over the ones npm ci just installed in the image. On a Windows host that means
+# Windows/native binaries (esbuild, rollup) land in a Linux container — the build
+# either fails outright or produces a bundle from the wrong platform's toolchain.
+# It also sends ~300 MB of build context to the daemon on every build.
+node_modules
+
+# Rebuilt inside the image by `npm run build` — copying the host's stale output
+# risks it being served instead of the fresh one.
+dist
+
+# Never bake local env files into an image layer; the container gets its config
+# from docker-compose instead.
+.env
+.env.*
+
+.git
+.gitignore
+Dockerfile
+.dockerignore
+*.log
+npm-debug.log*
+.vscode
+.idea
+coverage
+tests

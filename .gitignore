@@ -1,0 +1,24 @@
+# Real secrets for docker compose. .env.example is the committed template.
+# This matters more than usual here: .env holds CREDENTIALS_SECRET, the AES-256
+# key that every stored technical-access password is encrypted with.
+.env
+.env.local
+.env.*.local
+
+# Build output
+node_modules/
+dist/
+target/
+
+# Local H2 database files (dev profile). Disposable — delete the folder for a
+# clean slate; the schema is recreated by ddl-auto and reseeded on next boot.
+repository-api/data/
+*.mv.db
+*.trace.db
+
+# Tooling / editor
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+*.log

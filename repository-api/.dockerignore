@@ -1,0 +1,15 @@
+# Build output is regenerated inside the image. Copying the host's target/ also
+# drags in a jar built by a different JDK on a different OS, which then sits in
+# the build context competing with the one Maven produces.
+target
+
+# .mvn/ and mvnw are NOT excluded — the Dockerfile invokes ./mvnw, so the wrapper
+# scripts and .mvn/wrapper/maven-wrapper.properties must be present in the context.
+
+.git
+.gitignore
+Dockerfile
+.dockerignore
+*.log
+.vscode
+.idea

@@ -1,0 +1,1313 @@
+/* ─────────────────────────────────────────────────────────
+   Global layout — shared by Dashboard and ClientDetail
+───────────────────────────────────────────────────────── */
+body {
+  background: #f4f6f9;
+  padding: 32px;
+  font-family: -apple-system, "Segoe UI", Arial, sans-serif;
+}
+.container-main {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+.page-header p {
+  color: #64748b;
+  font-size: 13px;
+  margin: 0;
+}
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+.concept-note {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #3730a3;
+  margin-bottom: 20px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Dashboard — search + table
+───────────────────────────────────────────────────────── */
+.search-bar {
+  max-width: 320px;
+}
+.search-bar input {
+  border-radius: 8px;
+}
+
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+th.sortable:hover {
+  background: #33415a;
+}
+th.sortable .arrow {
+  opacity: 0.4;
+  font-size: 11px;
+  margin-left: 4px;
+}
+th.sortable.sorted .arrow {
+  opacity: 1;
+}
+
+table thead th {
+  background: #2c3e50;
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 12px 14px;
+  border: none;
+}
+table tbody td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  font-size: 14px;
+}
+table tbody tr {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+.client-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.badge-statut-en-regle {
+  background: #dbeafe;
+  color: #1e40af;
+  font-weight: 500;
+  padding: 6px 14px;
+}
+.badge-statut-suspendu {
+  background: #f1f5f9;
+  color: #64748b;
+  font-weight: 500;
+  padding: 6px 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+}
+
+.error-banner {
+  margin-bottom: 16px;
+}
+
+.loading-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ClientDetail — shared card header
+───────────────────────────────────────────────────────── */
+.back-link {
+  font-size: 13px;
+  color: #64748b;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.back-link:hover {
+  color: #1e293b;
+}
+
+.card-header-custom {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eef1f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header-custom h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+.card-body-custom {
+  padding: 20px;
+}
+.add-btn {
+  font-size: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ModuleList
+───────────────────────────────────────────────────────── */
+.module-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.module-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #eef1f5;
+  /* Was `flex-direction: column`, which stacked the title, the dates and the links
+     one under the other so every block sat against the left edge and most of the
+     row's width went unused. Four columns instead: name | dates | links | action. */
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 2fr) auto;
+  align-items: center;
+  gap: 20px;
+}
+.module-item:last-child {
+  border-bottom: none;
+}
+/* display:contents dissolves this wrapper so its two children — the title and the
+   Modifier button — become grid items of .module-item directly. That is what lets
+   the button sit at the end of the row while the title stays first, without moving
+   anything in the markup. */
+.module-item .mod-top-row {
+  display: contents;
+}
+/* DOM order is title, button, dates, links; `order` puts the button last. */
+.module-item .mod-title {
+  order: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.module-item .mod-title .badge-version {
+  font-weight: 400;
+  font-size: 12px;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+.module-item .mod-meta {
+  order: 2;
+  min-width: 0;
+  font-size: 13px;
+  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.module-item .mod-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.module-item .mod-meta .label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.module-edit-btn {
+  order: 4;
+  justify-self: end;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.module-edit-btn:hover {
+  background: #e2e8f0;
+}
+
+.mod-links {
+  order: 3;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+.mod-links .link-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.mod-links .link-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  min-width: 70px;
+}
+.mod-links a {
+  text-decoration: none;
+  word-break: break-all;
+}
+.mod-links a:hover {
+  text-decoration: underline;
+}
+.mod-links .link-externe a {
+  color: #2563eb;
+}
+.mod-links .link-interne a {
+  color: #64748b;
+}
+
+/* Four columns are unreadable on a phone, so the row folds back to the original
+   stacked layout: .mod-top-row becomes a flex row again (taking the title and the
+   button back as its own children) and the order values are reset. */
+@media (max-width: 900px) {
+  .module-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .module-item .mod-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .module-item .mod-title,
+  .module-item .mod-meta,
+  .mod-links,
+  .module-edit-btn {
+    order: 0;
+  }
+  .mod-links {
+    margin-top: 6px;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.modal-card {
+  width: min(640px, 100%);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #edf2f7;
+}
+.modal-header h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 18px;
+}
+.modal-close {
+  border: none;
+  background: #f1f5f9;
+  color: #334155;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.module-form {
+  padding: 20px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+.form-grid label.full-width {
+  grid-column: 1 / -1;
+}
+.form-grid input {
+  width: 100%;
+  border: 1px solid #dfe7f1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #fff;
+}
+.form-grid input:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.15);
+  border-color: #60a5fa;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+.btn-secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* ─────────────────────────────────────────────────────────
+   AccessVault
+───────────────────────────────────────────────────────── */
+.access-vault {
+  width: 100%;
+}
+
+.access-vault-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.access-edit-btn {
+  min-width: 88px;
+}
+
+.access-row {
+  display: flex;
+  align-items: center;
+  /* Was space-between, which worked when a third child (the ACTIF badge) held the
+     right edge. With only the label and the field column left, space-between would
+     push the fields against the far right of the card and leave a gap in the middle. */
+  justify-content: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+.access-row:last-child {
+  border-bottom: none;
+}
+.access-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+  flex: 0 0 220px;
+}
+.access-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.access-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #1e293b;
+}
+.access-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.detailed-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+  max-width: 440px;
+}
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 40px;
+}
+.field-row-clickable {
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.field-row-clickable:hover {
+  border-color: #bfdbfe;
+  background: #f1f5f9;
+}
+.field-row-edit {
+  gap: 10px;
+}
+.field-row .field-label {
+  width: 90px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin: 0;
+}
+.field-row .field-value {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #1e293b;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.field-row .field-value-plain {
+  color: #334155;
+  font-family: inherit;
+}
+.field-input {
+  flex: 1;
+  min-height: 32px;
+  border: 1px solid #dfe7f1;
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: 13px;
+  color: #1e293b;
+  background: #fff;
+}
+.field-input:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.access-note-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+}
+.access-note-label {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.access-note-box,
+.access-note-textarea {
+  width: 100%;
+  min-height: 96px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #334155;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.access-note-textarea {
+  resize: vertical;
+}
+
+/* ─────────────────────────────────────────────────────────
+   AccessImageGallery — sits under the last access row
+───────────────────────────────────────────────────────── */
+.gallery-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+}
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.gallery-heading-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gallery-heading-group .access-note-label {
+  margin-bottom: 0;
+}
+.gallery-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 11px;
+  font-weight: 700;
+}
+.gallery-add-btn {
+  min-width: 88px;
+  font-size: 12px;
+  padding: 7px 12px;
+}
+.gallery-file-input {
+  display: none;
+}
+
+.gallery-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 16px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+.gallery-dropzone:hover,
+.gallery-dropzone:focus-visible {
+  border-color: #93c5fd;
+  background: #f1f5f9;
+  outline: none;
+}
+.gallery-dropzone.is-dragging {
+  border-color: #2563eb;
+  background: #eff6ff;
+  transform: scale(1.005);
+}
+.gallery-dropzone.is-busy {
+  cursor: progress;
+  opacity: 0.75;
+}
+.gallery-dropzone-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+.gallery-dropzone-text {
+  font-size: 13px;
+  color: #475569;
+}
+.gallery-dropzone-text strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+.gallery-dropzone-hint {
+  font-size: 11px;
+  color: #94a3b8;
+}
+.gallery-error {
+  margin-top: 10px;
+}
+.gallery-empty {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.gallery-tile {
+  position: relative;
+}
+.gallery-thumb {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f1f5f9;
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.gallery-thumb:disabled {
+  cursor: default;
+}
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.gallery-thumb:hover,
+.gallery-thumb:focus-visible {
+  border-color: #93c5fd;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
+  outline: none;
+}
+.gallery-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.42);
+  color: #fff;
+  font-size: 20px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.gallery-thumb:hover .gallery-thumb-overlay,
+.gallery-thumb:focus-visible .gallery-thumb-overlay {
+  opacity: 1;
+}
+.gallery-thumb-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: gallery-shimmer 1.4s ease infinite;
+}
+
+.gallery-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 160ms ease, background 160ms ease;
+}
+.gallery-tile:hover .gallery-delete,
+.gallery-delete:focus-visible {
+  opacity: 1;
+}
+.gallery-delete:hover {
+  background: #dc2626;
+}
+.gallery-delete:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+/* Two-step delete: the × arms it, this overlay commits it. An image here is a
+   record of a client's infrastructure that cannot be recovered from the UI, so a
+   single stray click must not destroy one. */
+.gallery-confirm {
+  position: absolute;
+  /* Covers the thumbnail only, not the whole tile — the filename underneath stays
+     readable, which is the one piece of context you want while confirming. */
+  top: 0;
+  left: 0;
+  right: 0;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.88);
+  text-align: center;
+}
+.gallery-confirm-text {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+.gallery-confirm-actions {
+  display: flex;
+  gap: 6px;
+}
+.gallery-confirm-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gallery-confirm-yes {
+  background: #dc2626;
+  color: #fff;
+}
+.gallery-confirm-yes:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.gallery-confirm-no {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.gallery-tile-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 6px;
+}
+.gallery-tile-name {
+  font-size: 12px;
+  color: #334155;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gallery-tile-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ── Lightbox ─────────────────────────────────────────── */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100; /* above .modal-backdrop (1000) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Near-opaque rather than a light scrim: the page underneath is a credentials
+     table, and at 0.9 the field labels behind stayed legible through the overlay. */
+  background: rgba(8, 13, 26, 0.975);
+  backdrop-filter: blur(6px);
+  animation: lightbox-fade 160ms ease;
+}
+.lightbox-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+  color: #fff;
+}
+.lightbox-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.lightbox-title strong {
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lightbox-title span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.lightbox-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.lightbox-counter {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+.lightbox-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+.lightbox-btn:hover,
+.lightbox-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+  outline: none;
+}
+.lightbox-close {
+  font-size: 22px;
+}
+.lightbox-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 66px 72px 40px;
+}
+.lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  animation: lightbox-zoom 180ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.lightbox-loading {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+.lightbox-nav:hover,
+.lightbox-nav:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+  outline: none;
+}
+.lightbox-prev {
+  left: 18px;
+}
+.lightbox-next {
+  right: 18px;
+}
+
+@keyframes gallery-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+@keyframes lightbox-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lightbox-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  /* No hover on touch — reveal the delete affordance permanently instead. */
+  .gallery-delete {
+    opacity: 1;
+  }
+  .lightbox-stage {
+    padding: 62px 12px 74px;
+  }
+  .lightbox-nav {
+    top: auto;
+    bottom: 16px;
+    transform: none;
+  }
+  .lightbox-prev {
+    left: 24px;
+  }
+  .lightbox-next {
+    right: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-thumb,
+  .gallery-dropzone,
+  .gallery-thumb-overlay,
+  .gallery-delete {
+    transition: none;
+  }
+  .gallery-thumb:hover,
+  .gallery-thumb:focus-visible {
+    transform: none;
+  }
+  .gallery-thumb-placeholder,
+  .lightbox-backdrop,
+  .lightbox-image {
+    animation: none;
+  }
+}
+
+.copy-toast {
+  position: fixed;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 5px 8px;
+  border-radius: 999px;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+  pointer-events: none;
+}
+
+.toast-copied {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1e293b;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.25s;
+  pointer-events: none;
+}
+.toast-copied.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────
+   LoginPage
+───────────────────────────────────────────────────────── */
+
+/* Escapes the global 32px body padding instead of sitting inside it. This screen
+   is a full-bleed gradient, and `min-height: 100vh` within a padded body comes to
+   100vh + 64px — which gave the login page a permanent scrollbar and a mismatched
+   #f4f6f9 frame around the artwork. */
+.login-shell {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #dce9e8 0%, #dce9e8 48%, #f5f1e9 100%);
+  color: #172a2e;
+}
+
+/* One centred column. This was
+   `grid-template-columns: minmax(300px,.92fr) minmax(360px,1.08fr)` — a two-column
+   layout for a branding aside that no longer exists in the markup. With a single
+   child the form was pinned to the narrow left column and 55% of the card sat
+   empty beside it, which is what made the page look off-centre. */
+.login-frame {
+  width: min(100%, 440px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  box-shadow: 0 28px 70px rgba(27, 55, 57, 0.18);
+}
+.login-panel {
+  padding: 42px 38px 30px;
+  background: #fffdf9;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.login-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: #e8f1ed;
+  color: #174c4a;
+}
+.login-brand-name {
+  color: #8a9895;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.login-heading {
+  margin-bottom: 26px;
+  text-align: center;
+}
+.login-heading h1 {
+  margin: 0;
+  color: #172a2e;
+  font-size: 25px;
+  font-weight: 650;
+}
+.login-heading p {
+  margin: 7px 0 0;
+  color: #718083;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── Form ─────────────────────────────────────────────── */
+/* Labels stay left-aligned inside the centred card. Centring label text as well
+   would cost scannability: the eye tracks a column of fields by their shared left
+   edge, and centring removes it. */
+.login-form {
+  display: grid;
+  gap: 18px;
+}
+.login-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34484b;
+  font-size: 12px;
+  font-weight: 700;
+}
+.login-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d8e0dc;
+  border-radius: 9px;
+  background: #fff;
+  color: #8b9b98;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.login-input-wrap:focus-within {
+  border-color: #2c8078;
+  box-shadow: 0 0 0 4px rgba(44, 128, 120, 0.12);
+}
+.login-input-wrap input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #172a2e;
+  font: inherit;
+  font-size: 14px;
+}
+.login-input-wrap input::placeholder {
+  color: #a4b1ae;
+}
+.login-input-wrap input:disabled {
+  color: #8b9b98;
+  cursor: not-allowed;
+}
+.login-password-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #83938f;
+  cursor: pointer;
+}
+.login-password-toggle:hover {
+  color: #174c4a;
+}
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 12px;
+  border: 1px solid #efcaca;
+  border-radius: 8px;
+  background: #fff4f2;
+  color: #a84843;
+  font-size: 12px;
+}
+.login-error-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d86d64;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Centred content rather than space-between: with the label and arrow pushed to
+   opposite edges, a full-width button read as two unrelated elements. */
+.login-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 49px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #d26e53;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+.login-submit:hover:not(:disabled) {
+  background: #b95840;
+  box-shadow: 0 8px 18px rgba(183, 88, 64, 0.2);
+  transform: translateY(-1px);
+}
+.login-submit:focus-visible {
+  outline: 2px solid #174c4a;
+  outline-offset: 2px;
+}
+.login-submit:disabled {
+  cursor: progress;
+  opacity: 0.68;
+  transform: none;
+}
+.login-spinner {
+  animation: login-spin 900ms linear infinite;
+}
+
+.login-security-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 22px 0 0;
+  color: #879590;
+  font-size: 11px;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-shell {
+    padding: 20px 14px;
+  }
+  .login-panel {
+    padding: 32px 24px 24px;
+  }
+  .login-heading h1 {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-input-wrap,
+  .login-submit {
+    transition: none;
+  }
+  .login-submit:hover:not(:disabled) {
+    transform: none;
+  }
+  .login-spinner {
+    animation: none;
+  }
+}
+
+.dashboard-header-actions { display: flex; align-items: center; gap: 10px; }
+.logout-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border: 1px solid #d8dee6; border-radius: 8px; background: #fff; color: #475569; font-size: 12px; font-weight: 600; cursor: pointer; transition: border-color 160ms ease, color 160ms ease, background 160ms ease; }
+.logout-button:hover { border-color: #c2413a; background: #fff7f6; color: #b42318; }

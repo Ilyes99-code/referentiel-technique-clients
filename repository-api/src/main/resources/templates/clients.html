@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Backend Progress - Clients</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; padding: 40px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 3px solid #4a8fff; padding-bottom: 10px; }
+        .badge { background: #4a8fff; color: white; padding: 5px 12px; border-radius: 20px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #2c3e50; color: white; padding: 12px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; }
+        tr:hover { background: #f1f5f9; }
+        .status-active { color: green; font-weight: bold; }
+        .status-suspendu { color: orange; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Database Progress Viewer</h1>
+        <p>Total Clients in DB: <span class="badge" th:text="${totalCount}">0</span></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="client : ${clients}">
+                    <td th:text="${client.id}">1</td>
+                    <td th:text="${client.nom}">Client A</td>
+                    <td>
+                        <span th:class="${client.statut.name() == 'EN_REGLE'} ? 'status-active' : 'status-suspendu'"
+                              th:text="${client.statut.jsonValue}">en regle</span>
+                    </td>
+                </tr>
+                <tr th:if="${clients.isEmpty()}">
+                    <td colspan="3" style="text-align:center; color: #999;">No clients found in database yet.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 20px; color: #888; font-size: 14px;">
+            ✅ This view confirms your Spring Data JPA, Entities, Repositories, and Services are working correctly.
+        </p>
+    </div>
+</body>
+</html>
