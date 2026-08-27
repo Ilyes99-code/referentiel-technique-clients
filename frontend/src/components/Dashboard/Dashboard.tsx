@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import { useAuth } from "../../context/auth-context";
-import { getClients, ApiError } from "../../services/api";
-import type { ClientDto } from "../../types/models";
+import { getClients, createClient, ApiError } from "../../services/api";
+import type { ClientDto, ClientRequest } from "../../types/models";
 import { ClientTable } from "./ClientTable";
+import { ClientFormModal } from "./ClientFormModal";
 import { ErrorBanner } from "../shared/ErrorBanner";
+import { Toast } from "../shared/Toast";
 
 type SortKey = "nom" | "statut";
 
@@ -19,6 +21,15 @@ export const Dashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("nom");
   const [sortAsc, setSortAsc] = useState(true);
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const notify = (message: string) => {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 2500);
+  };
 
   useEffect(() => {
     if (!token) return;
@@ -74,6 +85,24 @@ export const Dashboard: React.FC = () => {
     navigate("/login", { replace: true });
   };
 
+  const handleCreateClient = async (payload: ClientRequest) => {
+    if (!token) return;
+    setCreating(true);
+    try {
+      const created = await createClient(payload, token);
+      setClients((current) => [...current, created]);
+      setCreateOpen(false);
+      notify("Client créé");
+      // Straight into the new client's page — creating one is almost always the
+      // first step of filling it in.
+      navigate(`/clients/${created.id}`);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Impossible de créer le client");
+    } finally {
+      setCreating(false);
+    }
+  };
+
   return (
     <div className="container-main">
       <div className="page-header">
@@ -85,6 +114,14 @@ export const Dashboard: React.FC = () => {
           <span className="badge bg-primary rounded-pill px-3 py-2">
             {clients.length} clients
           </span>
+          <button
+            type="button"
+            className="btn btn-sm btn-primary add-btn"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={15} aria-hidden="true" />
+            <span>Ajouter un client</span>
+          </button>
           <button type="button" className="logout-button" onClick={handleLogout}>
             <LogOut size={16} aria-hidden="true" />
             <span>Déconnexion</span>
@@ -111,6 +148,26 @@ export const Dashboard: React.FC = () => {
 
       {loading ? (
         <div className="loading-state">Chargement des clients…</div>
+      ) : clients.length === 0 ? (
+        /* A brand-new deployment starts with no clients, and everything else in the
+           app hangs off one — so an empty table here is a dead end rather than just
+           an empty screen. */
+        <div className="empty-state">
+          <div className="empty-state-icon" aria-hidden="true">📋</div>
+          <h2>Aucun client enregistré</h2>
+          <p>
+            Commencez par ajouter un client : vous pourrez ensuite y rattacher ses
+            modules, ses accès techniques et ses captures.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary add-btn"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={16} aria-hidden="true" />
+            <span>Ajouter un client</span>
+          </button>
+        </div>
       ) : (
         <>
           <ClientTable
@@ -125,6 +182,16 @@ export const Dashboard: React.FC = () => {
           </p>
         </>
       )}
+
+      {createOpen && (
+        <ClientFormModal
+          submitting={creating}
+          onClose={() => setCreateOpen(false)}
+          onSubmit={handleCreateClient}
+        />
+      )}
+
+      <Toast show={!!toastMessage} message={toastMessage ?? ""} />
     </div>
   );
 };

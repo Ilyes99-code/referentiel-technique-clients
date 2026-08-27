@@ -118,6 +118,33 @@ table tbody tr:hover {
   color: #94a3b8;
 }
 
+/* Richer treatment for the Dashboard's "no clients at all" state. Scoped to child
+   elements on purpose: ClientTable reuses .empty-state for a bare line of text
+   ("aucun client trouvé pour cette recherche"), and these rules must not reach it. */
+.empty-state-icon {
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.empty-state h2 {
+  margin: 0 0 8px;
+  color: #1e293b;
+  font-size: 17px;
+  font-weight: 600;
+}
+.empty-state p {
+  max-width: 420px;
+  margin: 0 auto 20px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.empty-state .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
 .error-banner {
   margin-bottom: 16px;
 }
@@ -161,8 +188,14 @@ table tbody tr:hover {
 .card-body-custom {
   padding: 20px;
 }
+/* inline-flex so the lucide icon and the label sit on one baseline; previously this
+   was only a font-size, which was enough for a text-only button. */
 .add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 /* ─────────────────────────────────────────────────────────

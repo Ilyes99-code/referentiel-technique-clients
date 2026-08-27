@@ -126,6 +126,17 @@ export async function getClient(clientId: number, token: string): Promise<Client
   return request<ClientDto>(`/clients/${clientId}`, { method: "GET" }, token);
 }
 
+export async function createClient(
+  payload: ClientRequest,
+  token: string,
+): Promise<ClientDto> {
+  return request<ClientDto>(
+    "/clients",
+    { method: "POST", body: JSON.stringify(payload) },
+    token,
+  );
+}
+
 export async function updateClient(
   clientId: number,
   payload: ClientRequest,
