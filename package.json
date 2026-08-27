@@ -1,15 +1,8 @@
 {
-  "dependencies": {
-    "axios": "^1.18.1",
-    "lucide-react": "^1.23.0"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.5.2",
-    "postcss": "^8.5.25",
-    "react-router-dom": "^7.18.2",
-    "tailwindcss": "^4.3.2"
-  },
-
+  "name": "referentiel-technique-clients",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Launcher for local development. The application's own dependencies live in frontend/package.json and repository-api/pom.xml.",
   "scripts": {
     "dev": "concurrently \"cd repository-api && .\\mvnw spring-boot:run\" \"cd frontend && npm run dev\""
   },
